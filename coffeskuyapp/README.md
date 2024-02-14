@@ -1,16 +1,4 @@
 # coffeskuyapp
 
-A new Flutter project.
+CoffeSkuy is a mobile app that helps you find the best cafés and coffee shops based on user ratings. Quickly discover top spots with reviews, photos, and menus. Ideal for finding the perfect place for any mood or occasion. Your guide to the community's favorite coffee destinations.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
