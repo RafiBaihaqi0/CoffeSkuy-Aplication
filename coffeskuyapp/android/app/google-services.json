@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "218160437712",
+    "project_id": "coffeskuy-auth-1941d",
+    "storage_bucket": "coffeskuy-auth-1941d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218160437712:android:ef2c63af93536a455cc1d5",
+        "android_client_info": {
+          "package_name": "com.example.coffeskuyapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLJn8L8smfGJo4C-um2Rf4w1y32MEg3hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
