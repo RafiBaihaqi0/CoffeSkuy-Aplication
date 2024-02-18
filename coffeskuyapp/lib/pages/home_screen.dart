@@ -3,98 +3,120 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:coffeskuyapp/routes/route_name.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+import 'package:coffeskuyapp/pages/data_screen.dart';
+import 'package:coffeskuyapp/pages/controller/home_controller.dart';
+import 'package:coffeskuyapp/pages/account_pages/account_screen.dart';
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final HomeController homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    if (auth.currentUser != null){
-      print(auth.currentUser!.email);
-    }
     return Scaffold(
-      body: PageStorage(
-        bucket: PageStorageBucket(),
-        child: currentScreen(),
+      body: PageView(
+        controller: homeController.pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          home_item(context),
+          DataScreen(),
+          ProfileScreen()
+        ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              ElevatedButton(
-              onPressed: () {
-                Get.toNamed(RouteName.home_screen);
-              },
-              style: ElevatedButton.styleFrom(elevation: 0,backgroundColor: Colors.transparent, foregroundColor: Colors.blue),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.home,
-                    color:  Colors.brown,
+      bottomNavigationBar: Obx(() => ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        child: BottomAppBar(
+          child: Container(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    homeController.changeTab(0);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.blue,
                   ),
-                  Text(
-                    'Home',
-                    style: TextStyle(
-                      color: Colors.brown,
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.home,
+                        color: homeController.currentPageIndex == 0 ? Colors.brown : Colors.grey,
+                      ),
+                      Text(
+                        'Home',
+                        style: TextStyle(
+                          color: homeController.currentPageIndex == 0 ? Colors.brown : Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ) ,
-              ),
-              ElevatedButton(
-              onPressed: () {
-                Get.toNamed(RouteName.data_screen);
-              },
-              style: ElevatedButton.styleFrom(elevation: 0,backgroundColor: Colors.transparent, foregroundColor: Colors.blue),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.coffee,
-                    color:  Colors.grey,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    homeController.changeTab(1);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.blue,
                   ),
-                  Text(
-                    'Caffe',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.coffee,
+                        color: homeController.currentPageIndex == 1 ? Colors.brown : Colors.grey,
+                      ),
+                      Text(
+                        'Caffe',
+                        style: TextStyle(
+                          color: homeController.currentPageIndex == 1 ? Colors.brown : Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ) ,
-              ),
-              ElevatedButton(
-              onPressed: () {
-                Get.toNamed(RouteName.profile_screen);
-              },
-              style: ElevatedButton.styleFrom(elevation: 0,backgroundColor: Colors.transparent, foregroundColor: Colors.blue),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.person,
-                    color:  Colors.grey,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    homeController.changeTab(2);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.blue,
                   ),
-                  Text(
-                    'Account',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.person,
+                        color: homeController.currentPageIndex == 2 ? Colors.brown : Colors.grey,
+                      ),
+                      Text(
+                        'Account',
+                        style: TextStyle(
+                          color: homeController.currentPageIndex == 2 ? Colors.brown : Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ) ,
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
+    ));
   }
 }
-
 
 final List<Container> containerList = [
   Container(
@@ -294,7 +316,7 @@ final List<Widget> containerSliders = containerList
         ))
     .toList();
 
-Container near_item(BuildContext context) {
+Container theme_item(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 2,
       child: GridView.count(
@@ -504,122 +526,105 @@ Container near_item(BuildContext context) {
   }
   TextStyle subTitle() => TextStyle(fontWeight: FontWeight.w500);
 
-class currentScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Container(
-          padding: EdgeInsets.all(16),
-          color: Colors.white,
-          child: ListView(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 70, left: 100), //apply padding to all four sides
-                    child: Text(
-                    "COFFESKUY",
-                    style: GoogleFonts.jaldi(
-                      textStyle: TextStyle(fontSize: 32, 
-                          fontWeight: FontWeight.w600,
-                          color: Colors.brown,),
-                    ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.notifications,
-                    color: Colors.brown,
-                    size: 32.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: 20,
-                height: 50.0,
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: 
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'search caffe of coffeshop',
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
-                    prefixIcon: Icon(Icons.search),  
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Recommended for you",
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(fontSize: 19, 
-                          fontWeight: FontWeight.w500,
-                          color: Colors.brown,),
-                    ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                    aspectRatio: 16/9,
-                    enlargeCenterPage: false,
-                    enableInfiniteScroll: false,
-                    initialPage: 1,
-                    autoPlay: true,
-                    padEnds : false,
-                    ),
-                  items: containerSliders,
-                  )
-                )
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Pick your own Theme",
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(fontSize: 19, 
-                          fontWeight: FontWeight.w500,
-                          color: Colors.brown,),
-                    ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              near_item(context)
-            ],
+ListView home_item(BuildContext context) {
+  return ListView(
+    padding: EdgeInsets.all(16),
+    children : [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "COFFESKUY",
+            style: GoogleFonts.jaldi(
+              textStyle: TextStyle(fontSize: 32, fontWeight: FontWeight.w600, color: Colors.brown),
+            ),
+          ),
+          Icon(
+            Icons.notifications,
+            color: Colors.brown,
+            size: 32.0,
+          ),
+        ],
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      Container(
+        width: 20,
+        height: 50.0,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: TextFormField(
+          decoration: InputDecoration(
+            hintText: 'search caffe of coffeshop',
+            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            prefixIcon: Icon(Icons.search),
           ),
         ),
       ),
-    );
-  }
+      SizedBox(
+        height: 20,
+      ),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          "Recommended for you",
+          style: GoogleFonts.inter(
+            textStyle: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.brown),
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      InkWell(
+        onTap: () {
+          // Navigate to the new page
+          Get.toNamed(RouteName.login_screen);
+        },
+        child: SizedBox(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: CarouselSlider(
+              options: CarouselOptions(
+                aspectRatio: 16/9,
+                enlargeCenterPage: false,
+                enableInfiniteScroll: false,
+                initialPage: 1,
+                autoPlay: true,
+                padEnds : false,
+              ),
+              items: containerSliders,
+            ),
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          "Pick your own Theme",
+          style: GoogleFonts.inter(
+            textStyle: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.brown),
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      theme_item(context),
+    ]
+  );
 }
-
-// Place jobs_item, positionText, and titleStyle functions here

@@ -1,5 +1,5 @@
 import 'package:coffeskuyapp/pages/home_screen.dart';
-import 'package:coffeskuyapp/pages/login_screen.dart';
+import 'package:coffeskuyapp/pages/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeskuyapp/pages/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +14,7 @@ void main () async {
   options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
+  Get.put(HomeController());
 }
 
 class MyApp extends StatelessWidget {
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
 
       ),
 
-      home: SplashScreen(),
+      home: HomeScreen(),
       getPages: PageRouteApp.pages,
 //      routes: {
 //        '/search': (context) => SearchScreen(),
