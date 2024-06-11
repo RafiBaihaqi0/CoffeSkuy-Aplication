@@ -1,9 +1,13 @@
+import 'package:coffeskuyapp/pages/home_screen.dart';
+import 'package:coffeskuyapp/services/auth_services.dart';
+import 'package:coffeskuyapp/services/globals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeskuyapp/pages/login_screen.dart';
 import 'package:get/get.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 Color mainColor = const Color(0x402625);
@@ -13,27 +17,34 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  registerSubmit() async {
-  try {
-    final user = await _firebaseAuth.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => LoginScreen(),
-      ),
-    );
-  } catch (e) {
-    print(e);
-    SnackBar(content: Text(e.toString()));
+  String _name = '';
+  String _email = '';
+  String _password = '';
+
+
+  createAccountPressed() async{
+    bool emailValid = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(_email);
+    if(emailValid){
+      http.Response response = await AuthServices.register(_name, _email, _password);
+      Map responseMap = jsonDecode(response.body);
+      print(response.statusCode);
+      if (response.statusCode==200){
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (BuildContext context) => HomeScreen(),
+        ));
+      }else{
+        errorSnackBar(context, responseMap.values.first[0]);
+      }
+    }else{
+      errorSnackBar(context, 'email not valid');
+    }
   }
-}
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +77,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    height: 50,
+                  ),
                   Container(
                     child: Center(
                       child: ColorFiltered(
@@ -83,6 +97,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
+                  Container(
+                    height: 44,
+                    width: 274,                    
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        hintText: 'Enter your Username',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        prefixIcon: Icon(Icons.person),                        
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                            _name = value;
+                          });
+                      },
+                    ),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -90,7 +123,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 44,
                     width: 274,                    
                     child: TextFormField(
-                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter your email',
@@ -99,6 +131,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         prefixIcon: Icon(Icons.person),                        
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                            _email = value;
+                          });
+                      },
                     ),
                   ),
                   const SizedBox(
@@ -108,7 +145,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 44,
                     width: 274,                    
                     child: TextFormField(
-                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -118,6 +154,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         prefixIcon: Icon(Icons.lock),                        
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                            _password = value;
+                          });
+                      },
                     ),
                   ),
                   const SizedBox(
@@ -131,9 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: Border.all(color: Color(0xff475BD8)),
                       borderRadius: BorderRadius.circular(20)),
                     child: TextButton(
-                      onPressed: () async{
-                        registerSubmit();
-                      },
+                      onPressed: () => createAccountPressed(),
                       child: const Text(
                         "Register",
                         style: TextStyle(
@@ -154,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Text('Login'),
                       ),
                     ],
-                  ),               
+                  ),
                 ],
               ),
             ),

@@ -1,7 +1,12 @@
+import 'dart:convert';
+
+import 'package:coffeskuyapp/services/auth_services.dart';
+import 'package:coffeskuyapp/services/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeskuyapp/pages/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:coffeskuyapp/pages/register_screen.dart';
+import 'package:http/http.dart' as http;
 
 Color mainColor = const Color(0x402625);
 
@@ -11,34 +16,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  loginSubmit() async {
-  try {
-    final user = await _firebaseAuth.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(),
-      ),
-    );
-  } catch (e) {
-    print(e);
-    SnackBar(
-        content: const Text('Invalid Email and Password'),
-        action: SnackBarAction(
-          label: "Undo",
-          onPressed: () {
-            //some code to undo the change
-          },
-        ),
-      );
+  Color _emailBorderColor = Colors.grey;
+  Color _passwordBorderColor = Colors.grey;
+  String _email = '';
+  String _password = '';
+
+  loginAccoutPressed() async{
+    if(_email.isNotEmpty && _password.isNotEmpty){
+      http.Response response = await AuthServices.login(_email, _password);
+      Map responseMap = jsonDecode(response.body);
+      if(response.statusCode==200){
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (BuildContext context) => HomeScreen(),
+        ));
+      }else{
+        errorSnackBar(context, responseMap.values.first);
+      }
+    }else{
+      errorSnackBar(context, 'enter all required fields');
+    }
   }
-}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,28 +49,32 @@ class _LoginScreenState extends State<LoginScreen> {
             Image.asset("assets/img/login_top.png"),
             Positioned(
               top: 60.0,
-              left: 25.0,
+              left: 70.0,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Welcome Back!",
                     style:TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 32),
                   ),
+                  SizedBox(height: 10),
                   Text(
-                    "Log in to your existant account of CoffeSkuy",
+                    "Login into your CoffeSkuy Account",
                     style:TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 20),
                   )
                 ],
               ),
-            ),
+            ), // INI RUSAK UBAH NTAR
             Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(top: 50),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    height: 50,
+                  ),
                   Container(
                     child: Center(
                       child: ColorFiltered(
@@ -88,6 +92,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
+                  Container(
+                    height: 44,
+                    width: 274,                    
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(color: _emailBorderColor),
+                        ),
+                        prefixIcon: Icon(Icons.person),                        
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                            _email = value;
+                          });
+                      },
+                    ),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -95,45 +119,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 44,
                     width: 274,                    
                     child: TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Enter your email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        prefixIcon: Icon(Icons.person),                        
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty || !value.contains('@')) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10
-                  ),
-                  Container(
-                    height: 44,
-                    width: 274,                    
-                    child: TextFormField(
-                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter your password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(color: _passwordBorderColor),
                         ),
                         prefixIcon: Icon(Icons.lock),                        
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty || !value.contains('@')) {
-                          return 'Please enter a valid password';
-                        }
-                        return null;
+                      onChanged: (value) {
+                        setState(() {
+                            _password = value;
+                          });
                       },
                     ),
                   ),
@@ -148,9 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       border: Border.all(color: Color(0xff475BD8)),
                       borderRadius: BorderRadius.circular(20)),
                     child: TextButton(
-                      onPressed: () async{
-                       loginSubmit();
-                      },
+                      onPressed: ()=> loginAccoutPressed(),
                       child: const Text(
                         "Login",
                         style: TextStyle(

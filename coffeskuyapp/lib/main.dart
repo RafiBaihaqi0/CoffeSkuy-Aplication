@@ -1,5 +1,8 @@
+import 'package:coffeskuyapp/pages/account_pages/account_screen.dart';
 import 'package:coffeskuyapp/pages/home_screen.dart';
 import 'package:coffeskuyapp/pages/controller/home_controller.dart';
+import 'package:coffeskuyapp/pages/login_screen.dart';
+import 'package:coffeskuyapp/pages/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeskuyapp/pages/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
 
       ),
 
-      home: HomeScreen(),
+      home:LoginScreen(),
       getPages: PageRouteApp.pages,
 //      routes: {
 //        '/search': (context) => SearchScreen(),
