@@ -1,4 +1,5 @@
-import 'package:coffeskuyapp/pages/account_pages/account_screen.dart';
+import 'package:coffeskuyapp/pages/data_screen.dart';
+import 'package:coffeskuyapp/pages/items_screen/detail_screen.dart';
 import 'package:coffeskuyapp/pages/home_screen.dart';
 import 'package:coffeskuyapp/pages/controller/home_controller.dart';
 import 'package:coffeskuyapp/pages/login_screen.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:coffeskuyapp/routes/pages_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 void main () async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,11 +38,11 @@ class MyApp extends StatelessWidget {
 
       ),
 
-      home:LoginScreen(),
+      home:DataScreen(),
       getPages: PageRouteApp.pages,
 //      routes: {
 //        '/search': (context) => SearchScreen(),
-//        '/home': (context) => HomeScreen(),
+//        '/home': (context) => DetailScreen(),
 //        '/akun':(context) => AccountPage(),
 //      },
     );

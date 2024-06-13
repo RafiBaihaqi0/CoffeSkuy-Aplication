@@ -34,6 +34,10 @@ class AuthServices{
       headers: headers,
       body: body,
     );
+    var responseData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      responseData['email'] = email; // Add email to the response data
+    }
     print(response.body);
     return response;
   }

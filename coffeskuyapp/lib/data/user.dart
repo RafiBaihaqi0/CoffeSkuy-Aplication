@@ -1,26 +1,19 @@
 class User {
-  final int id;
+  final int id; // Ubah tipe data menjadi String
   final String name;
   final String email;
-  final String password; // Pastikan ada field password
 
-  User({required this.id, required this.name, required this.email, required this.password});
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
+      id: json['id'],// Konversi ke String
       name: json['name'],
       email: json['email'],
-      password: json['password'], // Pastikan ada field password
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'password': password, // Pastikan ada field password
-    };
   }
 }
