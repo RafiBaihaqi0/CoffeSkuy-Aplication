@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:coffeskuyapp/pages/maps_screen/maps_screen.dart';
+import 'package:coffeskuyapp/pages/form_screen.dart';
+import 'package:coffeskuyapp/pages/list_menu.dart';
 import 'package:coffeskuyapp/data/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -169,6 +171,17 @@ class _DetailScreenState extends State<DetailScreen> {
                     );
                   },
                 ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => ListMenu(cafeId: widget.cafe['id'],),
+                    ),
+                  );
+                },
+                child: Text('Add a Rating'),
               ),
               SizedBox(height: 16),
               Text(

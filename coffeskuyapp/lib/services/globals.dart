@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-const String baseURL = "http://192.168.18.34:8000/api/";
+const String baseURL = "http://192.168.0.103:8000/api/";
 const Map<String, String> headers = {"Content-Type":"application/json"};
 
 errorSnackBar(BuildContext context, String text){

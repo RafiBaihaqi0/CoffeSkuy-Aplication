@@ -4,20 +4,28 @@ import 'package:coffeskuyapp/pages/account_pages/components/profile_pic.dart';
 import 'package:get/get.dart';
 import 'package:coffeskuyapp/routes/route_name.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:coffeskuyapp/services/auth_services.dart'; // Import your updated AuthServices
 
-
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   static String routeName = "/profile";
 
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String userEmail = 'User'; // State variable to hold user email
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    if (auth.currentUser != null){
-      print(auth.currentUser!.email);
-    }
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -35,13 +43,13 @@ class ProfileScreen extends StatelessWidget {
                   bottom: 24,
                   child: Text.rich(
                     TextSpan(
-                      text: auth.currentUser!.email, // Ganti dengan nama yang sesuai
+                      text: userEmail, // Display user's email
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
-                    )
+                    ),
                   ),
                 ),
               ],
@@ -77,9 +85,13 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                Get.toNamed(RouteName.login_screen);
-              },                  
-              style: ElevatedButton.styleFrom(elevation: 0,backgroundColor: const Color.fromARGB(0, 251, 251, 251)),
+                  // Example: Logout logic
+                  Get.toNamed(RouteName.login_screen); // Navigate to login screen
+                },
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: const Color.fromARGB(0, 251, 251, 251),
+                ),
                 child: Text(
                   "Logout",
                   style: GoogleFonts.jaldi(
@@ -93,91 +105,6 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Get.toNamed(RouteName.home_screen);
-                },
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Colors.blue,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.home,
-                      color: Colors.grey,
-                    ),
-                    Text(
-                      'Home',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.toNamed(RouteName.data_screen);
-                },
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Colors.blue,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.coffee,
-                      color: Colors.grey,
-                    ),
-                    Text(
-                      'Caffe',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.toNamed(RouteName.profile_screen);
-                },
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Colors.blue,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.person,
-                      color: Colors.brown,
-                    ),
-                    Text(
-                      'Account',
-                      style: TextStyle(
-                        color: Colors.brown,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
