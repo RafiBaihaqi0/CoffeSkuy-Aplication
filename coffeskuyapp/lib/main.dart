@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
 
       ),
 
-      home:DataScreen(),
+      home:SplashScreen(),
       getPages: PageRouteApp.pages,
 //      routes: {
 //        '/search': (context) => SearchScreen(),

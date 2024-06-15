@@ -15,7 +15,7 @@ class ListMenu extends StatefulWidget {
 class _ListMenuState extends State<ListMenu> {
   List? menuItems;
   bool isLoading = true;
-  final String url = "http://192.168.0.103:8000/api/data";
+  final String url = "http://10.60.235.48:8000/api/data";
 
   @override
   void initState() {
@@ -36,11 +36,25 @@ class _ListMenuState extends State<ListMenu> {
       final response = await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        print("API response: $jsonResponse");  // Log the response
+
         final List<dynamic> menuList = jsonResponse['list'];
 
+        // Log menuList to see its structure
+        print("Menu list: $menuList");
+
+        // Filter the menu items based on the cafeId
+        final List<dynamic> filteredMenuList = menuList.where((menuItem) {
+          print("Checking item: $menuItem");
+          print("cafeId from API: ${menuItem['cafe_id']}, cafeId from widget: ${widget.cafeId}");
+          return menuItem['cafe_id'] == widget.cafeId;
+        }).toList();
+
+        print("Filtered menu list: $filteredMenuList");  // Log the filtered list
+
         setState(() {
-          widget.menus = menuList;
-          menuItems = menuList;
+          widget.menus = filteredMenuList;
+          menuItems = filteredMenuList;
           isLoading = false;
         });
       } else {
@@ -65,7 +79,7 @@ class _ListMenuState extends State<ListMenu> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : menuItems == null
+          : menuItems == null || menuItems!.isEmpty
               ? Center(child: Text("No menu available"))
               : ListView.builder(
                   itemCount: menuItems!.length,
@@ -90,12 +104,20 @@ class MenuItemCard extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Image.asset(
-              'assets/img/coffe4.jpg',// Replace with the actual field name for the image URL
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
+            // Handle case where 'gambar' might be empty
+            menu['gambar'] != null && menu['gambar'].isNotEmpty
+                ? Image.network(
+                    menu['gambar'],
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    'assets/img/coffe4.jpg', // Fallback image
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
             SizedBox(width: 10),
             Expanded(
               child: Column(

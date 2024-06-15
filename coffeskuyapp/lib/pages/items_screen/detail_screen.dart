@@ -39,7 +39,7 @@ class _DetailScreenState extends State<DetailScreen> {
   });
 
   try {
-    final response = await http.get(Uri.parse('http://192.168.0.103:8000/api/users'));
+    final response = await http.get(Uri.parse('http://10.60.235.48:8000/api/users'));
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body)['list'];
       setState(() {
@@ -124,7 +124,7 @@ class _DetailScreenState extends State<DetailScreen> {
               Row(
                 children: [
                   Text(
-                    'Rating : ${widget.cafe["averageRating"] ?? 0} / 5',
+                    '${widget.cafe["averageRating"] ?? 0} / 5',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 8),
@@ -166,10 +166,49 @@ class _DetailScreenState extends State<DetailScreen> {
                         backgroundColor: Colors.grey[300],
                         child: Icon(Icons.person, color: Colors.white),
                       ),
-                      title: Text(user.name), // Display user's name
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(user.name), // Display user's name
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 20,
+                              ),
+                              Text(
+                                '${review["rating"]}.0',
+                                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 4),
+                            
+                            ],
+                          ),
+                        ],
+                      ),
                       subtitle: Text(review["komentar"]), // Display review's comment
                     );
                   },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => CommentRatingForm(cafeId: widget.cafe['id'],),
+                    ),
+                  );
+                },
+                child: Text('Add a Rating'),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Menu',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               ElevatedButton(
@@ -181,7 +220,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                   );
                 },
-                child: Text('Add a Rating'),
+                child: Text('Menu'),
               ),
               SizedBox(height: 16),
               Text(
@@ -204,7 +243,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                   );
                 },
-                child: Text('Go to Maps Screen'),
+                child: Text('Open Maps'),
               ),
             ],
           ),

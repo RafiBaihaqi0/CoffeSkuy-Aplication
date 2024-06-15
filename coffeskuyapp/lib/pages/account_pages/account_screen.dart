@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:coffeskuyapp/routes/route_name.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:coffeskuyapp/services/auth_services.dart'; // Import your updated AuthServices
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String routeName = "/profile";
@@ -16,13 +17,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String userEmail = 'User'; // State variable to hold user email
+  String username = 'User'; // State variable to hold username
 
   @override
   void initState() {
     super.initState();
+    loadUsername(); // Load username when the screen initializes
   }
 
+  Future<void> loadUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedUsername = prefs.getString('name');
+    if (storedUsername != null) {
+      setState(() {
+        username = storedUsername; // Set the username to display in the UI
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   bottom: 24,
                   child: Text.rich(
                     TextSpan(
-                      text: userEmail, // Display user's email
+                      text: username, // Display user's username
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -86,6 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   // Example: Logout logic
+                  AuthServices.logout(); // Call your logout method
                   Get.toNamed(RouteName.login_screen); // Navigate to login screen
                 },
                 style: ElevatedButton.styleFrom(
