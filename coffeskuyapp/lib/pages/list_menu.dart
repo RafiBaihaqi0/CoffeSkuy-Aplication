@@ -15,7 +15,7 @@ class ListMenu extends StatefulWidget {
 class _ListMenuState extends State<ListMenu> {
   List? menuItems;
   bool isLoading = true;
-  final String url = "http://10.60.235.48:8000/api/data";
+  final String url = "http://192.168.1.6:8000/api/data";
 
   @override
   void initState() {

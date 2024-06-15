@@ -39,7 +39,7 @@ class _DetailScreenState extends State<DetailScreen> {
   });
 
   try {
-    final response = await http.get(Uri.parse('http://10.60.235.48:8000/api/users'));
+    final response = await http.get(Uri.parse('http://192.168.1.6:8000/api/users'));
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body)['list'];
       setState(() {

@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   Future<void> fetchCafes() async {
-  final response = await http.get(Uri.parse('http://10.60.235.48:8000/api/cafes'));
+  final response = await http.get(Uri.parse('http://192.168.1.6:8000/api/cafes'));
   await Future.delayed(Duration(seconds: 1));
 
   if (response.statusCode == 200) {
@@ -258,8 +258,8 @@ class _HomeScreenState extends State<HomeScreen> {
   
 
 Widget buildCafeItem(Cafe cafe) {
-  final imageUrl = 'http://10.60.235.48:8000/image/${cafe.gambar}';
-  print('http://192.168.18.34:8000/image/${cafe.gambar}');
+  final imageUrl = 'http://192.168.1.6:8000/image/${cafe.gambar}';
+  print('http://192.168.1.6:8000/image/${cafe.gambar}');
   return Container(
     margin: EdgeInsets.all(5.0),
     child: ClipRRect(

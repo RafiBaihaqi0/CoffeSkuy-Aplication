@@ -34,7 +34,7 @@ class _CommentRatingFormState extends State<CommentRatingForm> {
   }
 
   // Construct the API URL
-  final String url = 'http://10.60.235.48:8000/api/ratings';
+  final String url = 'http://192.168.1.6:8000/api/ratings';
 
   // Construct the request payload
   Map<String, dynamic> payload = {

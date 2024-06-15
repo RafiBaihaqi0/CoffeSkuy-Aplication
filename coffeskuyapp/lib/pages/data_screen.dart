@@ -13,7 +13,7 @@ class DataScreen extends StatefulWidget {
 }
 
 class _DataScreenState extends State<DataScreen> {
-  final String url = "http://10.60.235.48:8000/api/cafes";
+  final String url = "http://192.168.1.6:8000/api/cafes";
   List? cafes;
   bool isLoading = true;
 
